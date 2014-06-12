@@ -1,7 +1,7 @@
 /**
  * @fileoverview
 
-A jQuery plugin to populate a dropdown based on the results of another dropdown.
+A Gemini plugin to populate a dropdown based on the results of another dropdown.
 
 ### Notes
 - You bind this plugin to the dropdown that is changing based on the results of
@@ -25,17 +25,15 @@ attribute
 ```
 
  *
- * @namespace jquery.popdrop
+ * @namespace gemini.popdrop
  * @copyright Carpages.ca 2014
  * @author Matt Rose <matt@mattrose.ca>
  *
- * @requires jquery
- * @requires jquery.boiler
- * @requires underscore
+ * @requires gemini
  *
- * @prop {string} url {@link jquery.popdrop#url}
- * @prop {string} bind {@link jquery.popdrop#bind}
- * @prop {boolean} reset {@link jquery.popdrop#reset}
+ * @prop {string} url {@link gemini.popdrop#url}
+ * @prop {string} bind {@link gemini.popdrop#bind}
+ * @prop {boolean} reset {@link gemini.popdrop#reset}
  *
  * @example
   <html>
@@ -52,20 +50,22 @@ attribute
   </html>
  *
  * @example
-  $('#js-select-model').popdrop({
+  G('#js-select-model').popdrop({
     url: '/example/api/models.json',
     bind: '#js-select-make'
   });
  */
 
-define(['jquery-loader', 'underscore', 'jquery.boiler'], function($, _){
+define(['gemini'], function($){
+
+  var _ = $._;
 
   $.boiler('popdrop', {
     defaults: {
       /**
        * The URL to make ajax requests to
        *
-       * @name jquery.popdrop#url
+       * @name gemini.popdrop#url
        * @type string
        * @default false
        */
@@ -73,7 +73,7 @@ define(['jquery-loader', 'underscore', 'jquery.boiler'], function($, _){
       /**
        * The selector that the plugin will listen to for changes
        *
-       * @name jquery.popdrop#bind
+       * @name gemini.popdrop#bind
        * @type string
        * @default false
        */
@@ -82,7 +82,7 @@ define(['jquery-loader', 'underscore', 'jquery.boiler'], function($, _){
        * Resets the select dropdown to just the first option when there are no
        * results onChange.
        *
-       * @name jquery.popdrop#reset
+       * @name gemini.popdrop#reset
        * @type boolean
        * @default false
        */
@@ -123,7 +123,7 @@ define(['jquery-loader', 'underscore', 'jquery.boiler'], function($, _){
      *
      * @private
      * @method
-     * @name jquery.popdrop#_onDependantChange
+     * @name gemini.popdrop#_onDependantChange
     **/
     _onDependantChange: function(){
       var plugin = this;

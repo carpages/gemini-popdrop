@@ -1,11 +1,9 @@
 {
-  "name": "jquery-popdrop",
+  "name": "gemini-popdrop",
   "authors": [
     {"name": "Matt Rose", "email": "matt@mattrose.ca"}
   ],
   "dependencies": {
-    "jquery-loader": "ssh://git@stash.carpages.ca/gem/jquery-loader.git",
-    "jquery-boiler": "0.1.x",
-    "underscore": "1.6.x"
+    "gemini-loader": "ssh://git@stash.carpages.ca/gem/gemini-loader.git"
   }
 }
