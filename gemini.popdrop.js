@@ -8,18 +8,20 @@ A Gemini plugin to populate a dropdown based on the results of another dropdown.
 another
 - You can send all of the options as either a javascript option, or a ``data``
 attribute
-- Require the JSON response to be a list of objects
+- The JSON response needs to be mapped to a list of objects with ``value`` and
+``display`` keys to populate the dropdown. You can use the mapping function to
+map the data to this object.
 
-#### JSON Respons
+#### Expected data
 ```
 [
   {
-    "id": "caravan",
-    "name": "Caravan"
+    "value": "caravan",
+    "display": "Caravan"
   },
   {
-    "id": "viper",
-    "name": "Viper"
+    "value": "viper",
+    "display": "Viper"
   }
 ]
 ```
@@ -33,6 +35,7 @@ attribute
  *
  * @prop {string} url {@link gemini.popdrop#url}
  * @prop {string} bind {@link gemini.popdrop#bind}
+ * @prop {function} mapping {@link gemini.popdrop#mapping}
  * @prop {boolean} reset {@link gemini.popdrop#reset}
  *
  * @example
@@ -78,6 +81,16 @@ define(['gemini'], function($){
        * @default false
        */
       bind: false,
+      /**
+       * A function that accepts the JSON response and returns a list of options
+       * to populate the dropdown with. See expected data to know what the
+       * mapping should return.
+       *
+       * @name gemini.popdrop#mapping
+       * @type function
+       * @default false
+       */
+      mapping: false,
       /**
        * Resets the select dropdown to just the first option when there are no
        * results onChange.
@@ -135,27 +148,55 @@ define(['gemini'], function($){
         toSend[$el.attr('name')] = $el.val();
       });
 
+      plugin.idle();
+
+      $.getJSON(plugin.settings.url, toSend, function(data){
+        if (plugin.settings.mapping) {
+          data = plugin.settings.mapping(data);
+        }
+        plugin.populate(data);
+      });
+    },
+
+    /**
+     * Put the dropdown in idle mode
+     *
+     * @method
+     * @name gemini.popdrop#idle
+    **/
+    idle: function() {
+      var plugin = this;
+
       plugin.$el
         .empty()
         .append($("<option />").val(0).text('Loading...'));
       plugin.$el.trigger('change');
+    },
 
-      $.getJSON(plugin.settings.url, toSend, function(data){
-        // reset target
-        plugin.$el
-          .empty()
-          .append(plugin.$originalSelection);
+    /**
+     * Populates the dropdown using the given data
+     *
+     * @method
+     * @name gemini.popdrop#populate
+     * @param {array} data The data to populate the dropdown
+    **/
+    populate: function(data) {
+      var plugin = this;
 
-        //populate target
-        if (_.isArray(data) && data.length > 0){
-          $.each(data, function() {
-            plugin.$el.append($("<option />").val(this.id).text(this.name));
-          });
-        }else{
-          plugin.$el.html(plugin.$originalHtml);
-        }
-        plugin.$el.trigger('change');
-      });
+      // reset target
+      plugin.$el
+        .empty()
+        .append(plugin.$originalSelection);
+
+      //populate target
+      if (_.isArray(data) && data.length > 0){
+        $.each(data, function() {
+          plugin.$el.append($("<option />").val(this.value).text(this.display));
+        });
+      }else{
+        plugin.$el.html(plugin.$originalHtml);
+      }
+      plugin.$el.trigger('change');
     }
   });
 
