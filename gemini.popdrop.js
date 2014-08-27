@@ -141,7 +141,7 @@ define(['gemini'], function($){
     _onDependantChange: function(){
       var plugin = this;
 
-      var toSend = {}; toSend[plugin.$el.attr('name')] = plugin.$el.val();
+      var toSend = {};
 
       plugin.$dependants.each(function(){
         var $el = $(this);
