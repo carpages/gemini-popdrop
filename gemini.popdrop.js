@@ -36,6 +36,7 @@ map the data to this object.
  * @prop {string} url {@link gemini.popdrop#url}
  * @prop {string} bind {@link gemini.popdrop#bind}
  * @prop {function} mapping {@link gemini.popdrop#mapping}
+ * @prop {string} toQuery {@link gemini.popdrop#toQuery}
  * @prop {boolean} reset {@link gemini.popdrop#reset}
  *
  * @example
@@ -92,6 +93,14 @@ define(['gemini'], function($){
        */
       mapping: false,
       /**
+       * A selector of form elements to query with the JSON request
+       *
+       * @name gemini.popdrop#toQuery
+       * @type string
+       * @default settings.bind
+       */
+      toQuery: false,
+      /**
        * Resets the select dropdown to just the first option when there are no
        * results onChange.
        *
@@ -119,6 +128,9 @@ define(['gemini'], function($){
         plugin.$originalHtml.find('option:first').attr('selected', 'selected');
       }
 
+      //Cache elements to query the JSON request with
+      plugin.$toQuery =   plugin.settings.toQuery ?
+                        $(plugin.settings.toQuery) : false;
 
       //Setup dependants
       if (plugin.settings.bind) {
@@ -141,16 +153,17 @@ define(['gemini'], function($){
     _onDependantChange: function(){
       var plugin = this;
 
-      var toSend = {};
+      var $toQuery = plugin.$toQuery || plugin.$dependants,
+           toQuery = {};
 
-      plugin.$dependants.each(function(){
+      $toQuery.each(function(){
         var $el = $(this);
-        toSend[$el.attr('name')] = $el.val();
+        toQuery[$el.attr('name')] = $el.val();
       });
 
       plugin.idle();
 
-      $.getJSON(plugin.settings.url, toSend, function(data){
+      $.getJSON(plugin.settings.url, toQuery, function(data){
         if (plugin.settings.mapping) {
           data = plugin.settings.mapping(data);
         }
@@ -170,7 +183,6 @@ define(['gemini'], function($){
       plugin.$el
         .empty()
         .append($("<option />").val(0).text('Loading...'));
-      plugin.$el.trigger('change');
     },
 
     /**
