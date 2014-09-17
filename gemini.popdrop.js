@@ -9,7 +9,7 @@ another
 - You can send all of the options as either a javascript option, or a ``data``
 attribute
 - The JSON response needs to be mapped to a list of objects with ``value`` and
-``display`` keys to populate the dropdown. You can use the mapping function to
+``display`` keys to populate the dropdown. You can use the map function to
 map the data to this object.
 
 #### Expected data
@@ -35,7 +35,7 @@ map the data to this object.
  *
  * @prop {string} url {@link gemini.popdrop#url}
  * @prop {string} bind {@link gemini.popdrop#bind}
- * @prop {function} mapping {@link gemini.popdrop#mapping}
+ * @prop {function} map {@link gemini.popdrop#map}
  * @prop {string} toQuery {@link gemini.popdrop#toQuery}
  * @prop {boolean} reset {@link gemini.popdrop#reset}
  *
@@ -85,13 +85,13 @@ define(['gemini'], function($){
       /**
        * A function that accepts the JSON response and returns a list of options
        * to populate the dropdown with. See expected data to know what the
-       * mapping should return.
+       * map should return.
        *
-       * @name gemini.popdrop#mapping
+       * @name gemini.popdrop#map
        * @type function
        * @default false
        */
-      mapping: false,
+      map: false,
       /**
        * A selector of form elements to query with the JSON request
        *
@@ -164,8 +164,8 @@ define(['gemini'], function($){
       plugin.idle();
 
       $.getJSON(plugin.settings.url, toQuery, function(data){
-        if (plugin.settings.mapping) {
-          data = plugin.settings.mapping(data);
+        if (plugin.settings.map) {
+          data = plugin.settings.map(data);
         }
         plugin.populate(data);
       });
