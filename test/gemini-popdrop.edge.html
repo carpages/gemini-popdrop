@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Gemini Popdrop Edge Test</title>
+
+  <style>
+    body {
+      padding: 1em;
+    }
+  </style>
+
+  <script>window.G={D:{_qj:[]}};G.Q=function(k){G.D._qj.push(k)};//0.1.0</script>
+</head>
+<body>
+
+  <select id="js-select-make" name="make">
+    <option selected>Select Make</option>
+    <option value="acura">Acura</option>
+    <option value="dodge">Dodge</option>
+    <option value="ford">Ford</option>
+  </select>
+
+  <select id="js-select-model" name="model">
+    <option selected>Select Model</option>
+  </select>
+
+  <!-- Load JS. -->
+  <script data-main="gemini-popdrop.edge" src="../bower_components/requirejs/require.js"></script>
+</body>
+</html>
