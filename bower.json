@@ -6,8 +6,13 @@
   "main": [
     "gemini.popdrop.js"
   ],
-  "ignore": [],
+  "ignore": [
+    "test"
+  ],
   "dependencies": {
     "gemini-loader": "~0"
+  },
+  "devDependencies": {
+    "requirejs": "~2.1.11"
   }
 }
