@@ -1,17 +1,21 @@
 {
   "name": "gemini-popdrop",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "Gemini Popdrop",
   "author": {
     "name": "Matt Rose",
     "email": "matt@mattrose.ca",
     "url": "http://mattrose.ca"
   },
+  "main": "gemini.popdrop.js",
   "licenses": [
     {
       "type": "MIT"
     }
   ],
+  "dependencies": {
+    "gemini-loader": "~0"
+  },
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-contrib-jshint": "~0.7.2",
