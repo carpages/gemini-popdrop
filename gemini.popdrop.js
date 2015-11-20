@@ -79,6 +79,8 @@ map the data to this object.
     defaults: {
       /**
        * The URL to make ajax requests to
+       * hint: you can test this on your local site,
+       * e.g. https://repo-name.carpag.es/_lookup/models/?make_name=chevrolet&
        *
        * @name gemini.popdrop#url
        * @type string
