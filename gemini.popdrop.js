@@ -66,7 +66,9 @@ map the data to this object.
     define(['gemini'], factory);
   } else if (typeof exports === 'object') {
     // Node/CommonJS
-    module.exports = factory(require('gemini'));
+    module.exports = factory(
+      require('gemini-loader')
+    );
   } else {
     // Browser globals
     factory(G);
