@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v1.1.0
+
+    - Added a `onPopulate` callback option
+
 ## v1.0.1
 
     - Fixed gemini-loader requirement for commonjs
