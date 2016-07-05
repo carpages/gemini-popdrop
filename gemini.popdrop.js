@@ -38,6 +38,7 @@ map the data to this object.
  * @prop {function} map {@link gemini.popdrop#map}
  * @prop {string} toQuery {@link gemini.popdrop#toQuery}
  * @prop {boolean} reset {@link gemini.popdrop#reset}
+ * @prop {function} onPopulate {@link gemini.popdrop#onPopulate}
  *
  * @example
   <html>
@@ -123,7 +124,16 @@ map the data to this object.
        * @type boolean
        * @default false
        */
-      reset: false
+      reset: false,
+      /**
+       * Add a callback event for when the dropdown is populated with new data.
+       * The data is sent back as a parameter.
+       *
+       * @name gemini.popdrop#onPopulate
+       * @type function
+       * @default false
+       */
+      onPopulate: false
     },
 
     data: ['url', 'bind', 'reset'],
@@ -224,6 +234,8 @@ map the data to this object.
         plugin.$el.html(plugin.$originalHtml);
       }
       plugin.$el.trigger('change');
+
+      if (plugin.settings.onPopulate) plugin.settings.onPopulate.call(plugin, data);
     }
   });
 
