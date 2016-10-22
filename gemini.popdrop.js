@@ -61,24 +61,23 @@ map the data to this object.
   });
  */
 
-(function(factory) {
-  if (typeof define === 'function' && define.amd) {
+( function( factory ) {
+  if ( typeof define === 'function' && define.amd ) {
     // AMD. Register as an anonymous module.
-    define(['gemini'], factory);
-  } else if (typeof exports === 'object') {
+    define([ 'gemini' ], factory );
+  } else if ( typeof exports === 'object' ) {
     // Node/CommonJS
     module.exports = factory(
-      require('gemini-loader')
+      require( 'gemini-loader' )
     );
   } else {
     // Browser globals
-    factory(G);
+    factory( G );
   }
-}(function($) {
-
+}( function( $ ) {
   var _ = $._;
 
-  $.boiler('popdrop', {
+  $.boiler( 'popdrop', {
     defaults: {
       /**
        * The URL to make ajax requests to
@@ -90,6 +89,7 @@ map the data to this object.
        * @default false
        */
       url: false,
+
       /**
        * The selector that the plugin will listen to for changes
        *
@@ -98,6 +98,7 @@ map the data to this object.
        * @default false
        */
       bind: false,
+
       /**
        * A function that accepts the JSON response and returns a list of options
        * to populate the dropdown with. See expected data to know what the
@@ -108,6 +109,7 @@ map the data to this object.
        * @default false
        */
       map: false,
+
       /**
        * A selector of form elements to query with the JSON request
        *
@@ -116,6 +118,7 @@ map the data to this object.
        * @default settings.bind
        */
       toQuery: false,
+
       /**
        * Resets the select dropdown to just the first option when there are no
        * results onChange.
@@ -125,6 +128,7 @@ map the data to this object.
        * @default false
        */
       reset: false,
+
       /**
        * Add a callback event for when the dropdown is populated with new data.
        * The data is sent back as a parameter.
@@ -136,34 +140,35 @@ map the data to this object.
       onPopulate: false
     },
 
-    data: ['url', 'bind', 'reset'],
+    data: [ 'url', 'bind', 'reset' ],
 
-    init: function(){
+    init: function() {
       var plugin = this;
 
-      plugin.$originalSelection = plugin.$el.find('option:first');
+      plugin.$originalSelection = plugin.$el.find( 'option:first' );
 
-      //Set original HTML
-      if (plugin.settings.reset){
+      // Set original HTML
+      if ( plugin.settings.reset ) {
         plugin.$originalHtml = plugin.$originalSelection;
-      }else{
-        plugin.$originalHtml = $(plugin.$el.html());
-        //Reset selected of original html
-        plugin.$originalHtml.find('option:selected').removeAttr('selected');
-        plugin.$originalHtml.find('option:first').attr('selected', 'selected');
+      } else {
+        plugin.$originalHtml = $( plugin.$el.html());
+        // Reset selected of original html
+        plugin.$originalHtml.find( 'option:selected' ).removeAttr( 'selected' );
+        plugin.$originalHtml.find( 'option:first' ).attr( 'selected', 'selected' );
       }
 
-      //Cache elements to query the JSON request with
-      plugin.$toQuery =   plugin.settings.toQuery ?
-                        $(plugin.settings.toQuery) : false;
+      // Cache elements to query the JSON request with
+      plugin.$toQuery = plugin.settings.toQuery
+        ? $( plugin.settings.toQuery )
+        : false;
 
-      //Setup dependants
-      if (plugin.settings.bind) {
-        plugin.$dependants = $(plugin.settings.bind);
+      // Setup dependants
+      if ( plugin.settings.bind ) {
+        plugin.$dependants = $( plugin.settings.bind );
 
-        plugin.$dependants.change(function(e){
+        plugin.$dependants.change( function( e ) {
           e.preventDefault();
-          plugin._onDependantChange.call(plugin);
+          plugin._onDependantChange();
         });
       }
     },
@@ -175,24 +180,24 @@ map the data to this object.
      * @method
      * @name gemini.popdrop#_onDependantChange
     **/
-    _onDependantChange: function(){
+    _onDependantChange: function() {
       var plugin = this;
 
-      var $toQuery = plugin.$toQuery || plugin.$dependants,
-           toQuery = {};
+      var $toQuery = plugin.$toQuery || plugin.$dependants;
+      var toQuery = {};
 
-      $toQuery.each(function(){
-        var $el = $(this);
-        toQuery[$el.attr('name')] = $el.val();
+      $toQuery.each( function() {
+        var $el = $( this );
+        toQuery[$el.attr( 'name' )] = $el.val();
       });
 
       plugin.idle();
 
-      $.getJSON(plugin.settings.url, toQuery, function(data){
-        if (plugin.settings.map) {
-          data = plugin.settings.map(data);
+      $.getJSON( plugin.settings.url, toQuery, function( data ) {
+        if ( plugin.settings.map ) {
+          data = plugin.settings.map( data );
         }
-        plugin.populate(data);
+        plugin.populate( data );
       });
     },
 
@@ -207,7 +212,7 @@ map the data to this object.
 
       plugin.$el
         .empty()
-        .append($("<option />").val(0).text('Loading...'));
+        .append( $( '<option />' ).val( 0 ).text( 'Loading...' ));
     },
 
     /**
@@ -217,30 +222,29 @@ map the data to this object.
      * @name gemini.popdrop#populate
      * @param {array} data The data to populate the dropdown
     **/
-    populate: function(data) {
+    populate: function( data ) {
       var plugin = this;
 
       // reset target
       plugin.$el
         .empty()
-        .append(plugin.$originalSelection);
+        .append( plugin.$originalSelection );
 
-      //populate target
-      if (_.isArray(data) && data.length > 0){
-        $.each(data, function() {
-          plugin.$el.append($("<option />").val(this.value).text(this.display));
+      // populate target
+      if ( _.isArray( data ) && data.length > 0 ) {
+        $.each( data, function() {
+          plugin.$el.append( $( '<option />' ).val( this.value ).text( this.display ));
         });
-      }else{
-        plugin.$el.html(plugin.$originalHtml);
+      } else {
+        plugin.$el.html( plugin.$originalHtml );
       }
-      plugin.$el.trigger('change');
+      plugin.$el.trigger( 'change' );
 
-      if (plugin.settings.onPopulate) plugin.settings.onPopulate.call(plugin, data);
+      if ( plugin.settings.onPopulate ) plugin.settings.onPopulate.call( plugin, data );
     }
   });
 
   // Return the jquery object
   // This way you don't need to require both jquery and the plugin
   return $;
-
 }));
