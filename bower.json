@@ -1,13 +1,16 @@
 {
   "name": "gemini-popdrop",
   "authors": [
-    {"name": "Matt Rose", "email": "matt@mattrose.ca"}
+    {
+      "name": "Matt Rose",
+      "email": "matt@mattrose.ca"
+    }
   ],
   "main": [
     "gemini.popdrop.js"
   ],
   "ignore": [],
   "dependencies": {
-    "gemini-loader": "ssh://git@stash.carpages.ca/gem/gemini-loader.git#~0"
+    "gemini-loader": "0.3.x"
   }
 }
