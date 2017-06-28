@@ -1,7 +1,10 @@
 {
   "name": "gemini-popdrop",
   "authors": [
-    {"name": "Matt Rose", "email": "matt@mattrose.ca"}
+    {
+      "name": "Matt Rose",
+      "email": "matt@mattrose.ca"
+    }
   ],
   "main": [
     "gemini.popdrop.js"
@@ -10,7 +13,7 @@
     "test"
   ],
   "dependencies": {
-    "gemini-loader": "~0"
+    "gemini-loader": "0.3.x"
   },
   "devDependencies": {
     "requirejs": "~2.1.11"
