@@ -67,14 +67,12 @@ map the data to this object.
     define([ 'gemini' ], factory );
   } else if ( typeof exports === 'object' ) {
     // Node/CommonJS
-    module.exports = factory(
-      require( 'gemini-loader' )
-    );
+    module.exports = factory( require( 'gemini-loader' ));
   } else {
     // Browser globals
     factory( G );
   }
-}( function( $ ) {
+})( function( $ ) {
   var _ = $._;
 
   $.boiler( 'popdrop', {
@@ -162,13 +160,13 @@ map the data to this object.
         ? $( plugin.settings.toQuery )
         : false;
 
-      // Setup dependants
+      // Setup dependents
       if ( plugin.settings.bind ) {
-        plugin.$dependants = $( plugin.settings.bind );
+        plugin.$dependents = $( plugin.settings.bind );
 
-        plugin.$dependants.change( function( e ) {
+        plugin.$dependents.change( function( e ) {
           e.preventDefault();
-          plugin._onDependantChange();
+          plugin._onDependentChange();
         });
       }
     },
@@ -178,12 +176,12 @@ map the data to this object.
      *
      * @private
      * @method
-     * @name gemini.popdrop#_onDependantChange
-    **/
-    _onDependantChange: function() {
+     * @name gemini.popdrop#_onDependentChange
+     **/
+    _onDependentChange: function() {
       var plugin = this;
 
-      var $toQuery = plugin.$toQuery || plugin.$dependants;
+      var $toQuery = plugin.$toQuery || plugin.$dependents;
       var toQuery = {};
 
       $toQuery.each( function() {
@@ -206,13 +204,15 @@ map the data to this object.
      *
      * @method
      * @name gemini.popdrop#idle
-    **/
+     **/
     idle: function() {
       var plugin = this;
 
-      plugin.$el
-        .empty()
-        .append( $( '<option />' ).val( 0 ).text( 'Loading...' ));
+      plugin.$el.empty().append(
+        $( '<option />' )
+          .val( 0 )
+          .text( 'Loading...' )
+      );
     },
 
     /**
@@ -221,30 +221,34 @@ map the data to this object.
      * @method
      * @name gemini.popdrop#populate
      * @param {array} data The data to populate the dropdown
-    **/
+     **/
     populate: function( data ) {
       var plugin = this;
 
       // reset target
-      plugin.$el
-        .empty()
-        .append( plugin.$originalSelection );
+      plugin.$el.empty().append( plugin.$originalSelection );
 
       // populate target
       if ( _.isArray( data ) && data.length > 0 ) {
         $.each( data, function() {
-          plugin.$el.append( $( '<option />' ).val( this.value ).text( this.display ));
+          plugin.$el.append(
+            $( '<option />' )
+              .val( this.value )
+              .text( this.display )
+          );
         });
       } else {
         plugin.$el.html( plugin.$originalHtml );
       }
       plugin.$el.trigger( 'change' );
 
-      if ( plugin.settings.onPopulate ) plugin.settings.onPopulate.call( plugin, data );
+      if ( plugin.settings.onPopulate ) {
+        plugin.settings.onPopulate.call( plugin, data );
+      }
     }
   });
 
   // Return the jquery object
   // This way you don't need to require both jquery and the plugin
   return $;
-}));
+});
