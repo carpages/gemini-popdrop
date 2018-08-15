@@ -80,8 +80,13 @@ map the data to this object.
     var paramsNeeded = [];
 
     parts.forEach( function( part ) {
-      if ( part.indexOf( ':' ) > -1 ) {
+      if ( part.indexOf( ':' ) === 1 ) {
         var param = part.replace( ':', '' );
+
+        if ( param.match( /^[\d]+$/ ).length > 0 ) {
+          return;
+        }
+
         paramsNeeded.push( param );
 
         if ( !params.hasOwnProperty( param )) {

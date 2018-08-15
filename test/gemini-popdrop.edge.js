@@ -12,7 +12,7 @@ requirejs.config({
 });
 
 require([ 'gemini', 'gemini.popdrop', 'jquery.mockjax' ], function( G ) {
-  var urlFormat = '/example/api/:make/models';
+  var urlFormat = 'https://local.carpag.es:3000/example/api/:make/models';
 
   G.mockjax({
     url: /^\/example\/api\/([a-zA-Z0-9]+)\/models$/,
