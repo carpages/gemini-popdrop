@@ -105,7 +105,6 @@ map the data to this object.
   }
 
   function injectParamsIntoUrl( params, urlParts ) {
-    console.log({ params: urlParts });
     var paramNames = Object.keys( params );
 
     return urlParts
@@ -237,16 +236,20 @@ map the data to this object.
       plugin.idle();
       plugin.url = plugin._getUrl( toQuery );
 
-      $.getJSON(
-        plugin.url,
-        !plugin.settings.url.format ? toQuery : {},
-        function( data ) {
+      $.ajax({
+        url: plugin.url,
+        data: !plugin.settings.url.format ? toQuery : {},
+        dataType: 'json',
+        xhrFields: {
+          withCredentials: true
+        },
+        success: function( data ) {
           if ( plugin.settings.map ) {
             data = plugin.settings.map( data );
           }
           plugin.populate( data );
         }
-      );
+      });
     },
 
     /**
