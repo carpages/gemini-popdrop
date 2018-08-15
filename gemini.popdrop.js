@@ -75,24 +75,32 @@ map the data to this object.
 })( function( $ ) {
   var _ = $._;
 
-  function parseUrlFormatForRequiredParams( format ) {
-    if ( format.indexOf( ':' ) < 0 ) {
-      return;
-    }
-
-    var paramsNeeded = [];
+  function parseUrlFormatForRequiredParams( format, params ) {
     var parts = format.split( '/' );
-    parts.map( function( part ) {
+    var paramsNeeded = [];
+
+    parts.forEach( function( part ) {
       if ( part.indexOf( ':' ) > -1 ) {
-        paramsNeeded.push( part.replace( ':', '' ));
+        var param = part.replace( ':', '' );
+        paramsNeeded.push( param );
+
+        if ( !params.hasOwnProperty( param )) {
+          throw new Error(
+            'Expected param ' +
+              param +
+              ' not found in passed params object: ' +
+              JSON.stringify( params ) +
+              '.'
+          );
+        }
       }
-      return part;
     });
 
     return { paramsNeeded: paramsNeeded, urlParts: parts };
   }
 
   function injectParamsIntoUrl( params, urlParts ) {
+    console.log({ params: urlParts });
     var paramNames = Object.keys( params );
 
     return urlParts
@@ -222,13 +230,18 @@ map the data to this object.
       });
 
       plugin.idle();
+      plugin.url = plugin._getUrl( toQuery );
 
-      $.getJSON( plugin.getUrl(), toQuery, function( data ) {
-        if ( plugin.settings.map ) {
-          data = plugin.settings.map( data );
+      $.getJSON(
+        plugin.url,
+        !plugin.settings.url.format ? toQuery : {},
+        function( data ) {
+          if ( plugin.settings.map ) {
+            data = plugin.settings.map( data );
+          }
+          plugin.populate( data );
         }
-        plugin.populate( data );
-      });
+      );
     },
 
     /**
@@ -237,28 +250,14 @@ map the data to this object.
      * @method
      * @name gemini.popdrop#_getUrl
      **/
-    _getUrl: function() {
+    _getUrl: function( toQuery ) {
       var plugin = this;
       var url = plugin.settings.url;
 
-      if ( !!url.format && !!url.params ) {
+      if ( url.format ) {
         var format = url.format;
-        var params = url.params;
-
-        var parsedUrlFormat = parseUrlFormatForRequiredParams( format );
-
-        parsedUrlFormat.paramsNeeded.map( function( param ) {
-          if ( !params.hasOwnProperty( param )) {
-            throw new Error(
-              'Expected param ' +
-                param +
-                ' not found in passed params object: ' +
-                JSON.stringify( params ) +
-                '.'
-            );
-          }
-        });
-
+        var params = toQuery;
+        var parsedUrlFormat = parseUrlFormatForRequiredParams( format, params );
         return injectParamsIntoUrl( params, parsedUrlFormat.urlParts );
       }
 
