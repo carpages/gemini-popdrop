@@ -75,6 +75,38 @@ map the data to this object.
 })( function( $ ) {
   var _ = $._;
 
+  function parseUrlFormatForRequiredParams( format ) {
+    if ( format.indexOf( ':' ) < 0 ) {
+      return;
+    }
+
+    var paramsNeeded = [];
+    var parts = format.split( '/' );
+    parts.map( function( part ) {
+      if ( part.indexOf( ':' ) > -1 ) {
+        paramsNeeded.push( part.replace( ':', '' ));
+      }
+      return part;
+    });
+
+    return { paramsNeeded: paramsNeeded, urlParts: parts };
+  }
+
+  function injectParamsIntoUrl( params, urlParts ) {
+    var paramNames = Object.keys( params );
+
+    return urlParts
+      .map( function( urlPart ) {
+        var paramName = urlPart.replace( ':', '' );
+        if ( paramNames.indexOf( paramName ) > -1 ) {
+          return params[paramName];
+        }
+
+        return urlPart;
+      })
+      .join( '/' );
+  }
+
   $.boiler( 'popdrop', {
     defaults: {
       /**
@@ -191,12 +223,46 @@ map the data to this object.
 
       plugin.idle();
 
-      $.getJSON( plugin.settings.url, toQuery, function( data ) {
+      $.getJSON( plugin.getUrl(), toQuery, function( data ) {
         if ( plugin.settings.map ) {
           data = plugin.settings.map( data );
         }
         plugin.populate( data );
       });
+    },
+
+    /**
+     * Get the url to query
+     *
+     * @method
+     * @name gemini.popdrop#_getUrl
+     **/
+    _getUrl: function() {
+      var plugin = this;
+      var url = plugin.settings.url;
+
+      if ( !!url.format && !!url.params ) {
+        var format = url.format;
+        var params = url.params;
+
+        var parsedUrlFormat = parseUrlFormatForRequiredParams( format );
+
+        parsedUrlFormat.paramsNeeded.map( function( param ) {
+          if ( !params.hasOwnProperty( param )) {
+            throw new Error(
+              'Expected param ' +
+                param +
+                ' not found in passed params object: ' +
+                JSON.stringify( params ) +
+                '.'
+            );
+          }
+        });
+
+        return injectParamsIntoUrl( params, parsedUrlFormat.urlParts );
+      }
+
+      return url;
     },
 
     /**

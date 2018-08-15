@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>Gemini Popdrop Edge Test</title>
@@ -10,9 +11,15 @@
     }
   </style>
 
-  <script>window.G={D:{_qj:[]}};G.Q=function(k){G.D._qj.push(k)};//0.1.0</script>
+  <script>window.G = { D: { _qj: [] } }; G.Q = function (k) { G.D._qj.push(k) };//0.1.0</script>
 </head>
+
 <body>
+
+  <div>
+    <span>URL to query:</span>
+    <span id="query-url"></span>
+  </div>
 
   <select id="js-select-make" name="make">
     <option selected>Select Make</option>
@@ -28,4 +35,5 @@
   <!-- Load JS. -->
   <script data-main="gemini-popdrop.edge" src="../bower_components/requirejs/require.js"></script>
 </body>
+
 </html>
