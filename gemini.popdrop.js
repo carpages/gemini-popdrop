@@ -200,9 +200,7 @@ map the data to this object.
       }
 
       // Cache elements to query the JSON request with
-      plugin.$toQuery = plugin.settings.toQuery
-        ? $( plugin.settings.toQuery )
-        : false;
+      plugin.$toQuery = plugin.settings.toQuery ? $( plugin.settings.toQuery ) : false;
 
       // Setup dependents
       if ( plugin.settings.bind ) {
